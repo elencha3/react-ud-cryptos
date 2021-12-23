@@ -26,10 +26,14 @@ const Form = () => {
     
     const [cryptos, setCryptos] = useState([''])
     
-    //currency corresponde a state de useSelectCurrency
-    const [SelectCurrency, currencyState] = useSelectCurrency(
+    //currencyState corresponde a state de useSelectCurrency
+    const [CurrencySelect, currencyState] = useSelectCurrency(
         "Selecciona divisa",
         currency
+    );
+    const [CryptoSelect, cryptoState] = useSelectCurrency(
+        "Selecciona tu criptomoneda",
+        cryptos
     );
 
     useEffect(() => {
@@ -54,7 +58,8 @@ const Form = () => {
 
     return (
         <form action="">
-            <SelectCurrency />
+            <CurrencySelect />
+            <CryptoSelect />
 
             <SubmitInput type="submit" value="Cotizar" />
         </form>
