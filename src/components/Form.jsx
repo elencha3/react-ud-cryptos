@@ -5,7 +5,7 @@ import Error from "./Error";
 import { currency } from "../data/currency";
 
 const SubmitInput = styled.input`
-    background-color: #9497ff;
+    background-color: #3333ff;
     border: none;
     width: 100%;
     padding: 10px;
@@ -23,7 +23,7 @@ const SubmitInput = styled.input`
     }
 `;
 
-const Form = () => {
+const Form = ({currencies, setCurrencies}) => {
     const [cryptos, setCryptos] = useState([""]);
     const [error, setError] = useState(false);
 
@@ -65,6 +65,11 @@ const Form = () => {
             return;
         }
         setError(false)
+
+        setCurrencies({
+            currencyState,
+            cryptoState
+        })
         
     };
 

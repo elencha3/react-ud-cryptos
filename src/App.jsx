@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import cryptoImg from "./img/imagen-criptos.png";
 import Form from "./components/Form";
+import Result from "./components/Result";
 
 const Container = styled.div`
     max-width: 900px;
@@ -17,7 +18,7 @@ const Container = styled.div`
 const Image = styled.img`
     max-width: 400px;
     width: 80%;
-    margin: 100px auto;
+    margin: 50px auto;
     display: block;
 `;
 
@@ -26,32 +27,69 @@ const Heading = styled.h1`
     color: #fff;
     text-align: center;
     font-weight: 700;
-    font-family: 'Poppins', sans-serif;
-    margin-top: 80px;
+    font-family: "Poppins", sans-serif;
+    margin-top: 0px;
     margin-bottom: 50px;
     font-size: 34px;
 
     &::after {
-      content: '';
-      width: 300px;
-      height: 6px;
-      background-color: #66a2fe;
-      display: block;
-      margin: 10px auto;
+        content: "";
+        width: 300px;
+        height: 6px;
+        background-color: #000082;
+        display: block;
+        margin: 10px auto;
     }
-
 `;
 
+const ContainerResult = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+`
+
 function App() {
+    const [currencies, setCurrencies] = useState({});
+    const [result, setresult] = useState({});
+
+    useEffect(() => {
+        if (Object.keys(currencies).length > 0) {
+            const quoteCrypto = async () => {
+                const { currencyState, cryptoState } = currencies;
+                const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${cryptoState}&tsyms=${currencyState}`;
+
+                const response = await fetch(url)
+                const result = await response.json()
+
+                setresult(result.DISPLAY[cryptoState][currencyState])
+              
+            };
+
+            quoteCrypto();
+        }
+    }, [currencies]);
+
     return (
+      <>
         <Container>
             <Image src={cryptoImg} alt="Imágenes cripto-monedas" />
 
             <div>
-              <Heading>Cotiza Criptomonedas al instante</Heading>
-              <Form></Form>
+                <Heading>Cotiza Criptomonedas al instante</Heading>
+                <Form currencies={currencies} setCurrencies={setCurrencies} />
             </div>
+
+            {/* Solo con result no funciona porque es un objeto y siempre se va a mostrar.
+            Cogemos uno de los valores que nos da la cotización - PRICE */}
+           
         </Container>
+
+        <ContainerResult>
+          {result.PRICE && <Result result={result} />}
+        </ContainerResult>
+         
+         </>
     );
 }
 
